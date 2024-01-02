@@ -168,6 +168,22 @@ local function gen_buffer_entry(opts, buf, max_bufnr, cwd)
   return item_str
 end
 
+-- TODO filter buffers based on show_quickfix and show_unlisted
+local function tab_calculate_position(opts)
+  core.CTX(true)
+  opts._tab_to_buf = {}
+  opts._list_bufs()
+  local pos = 0
+  for t, bufnrs in pairs(opts._tab_to_buf) do
+    pos = pos + 1
+    if t == core.CTX().tabnr then
+      return pos
+    end
+    pos = pos + vim.tbl_count(bufnrs)
+  end
+  return nil
+end
+
 M.buffers = function(opts)
   opts = config.normalize_opts(opts, "buffers")
   if not opts then return end
@@ -418,6 +434,7 @@ M.tabs = function(opts)
   local reload, id = shell.reload_action_cmd(opts, "{+}")
   local contents = reload:gsub("%-%-%s+{%+}$", "")
   opts.__reload_cmd = reload
+  opts.__pos = tab_calculate_position(opts)
 
   -- get current tab/buffer/previous buffer
   -- save as a func ref for resume to reuse

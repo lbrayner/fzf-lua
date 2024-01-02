@@ -329,6 +329,9 @@ M.fzf = function(contents, opts)
   -- convert "exec_silent" actions to fzf's `execute-silent` binds
   opts = M.convert_reload_actions(opts.__reload_cmd or contents, opts)
   opts = M.convert_exec_silent_actions(opts)
+  if opts.__pos then
+    opts.keymap.fzf["load"] = string.format("pos(%d)", opts.__pos)
+  end
   local selected, exit_code = fzf.raw_fzf(contents, M.build_fzf_cli(opts),
     {
       fzf_bin = opts.fzf_bin,
