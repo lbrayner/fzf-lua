@@ -163,17 +163,19 @@ local function gen_buffer_entry(opts, buf, max_bufnr, cwd, prefix)
   return item_str
 end
 
--- TODO filter buffers based on show_quickfix and show_unlisted
 local function tab_calculate_position(opts)
   core.CTX(true)
   opts._tab_to_buf = {}
-  opts._list_bufs()
+  local _, excluded = filter_buffers(opts, opts._list_bufs)
   local pos = 0
   for t, bufnrs in pairs(opts._tab_to_buf) do
     pos = pos + 1
     if t == core.CTX().tabnr then
       return pos
     end
+    bufnrs = vim.tbl_filter(function(b)
+      return not excluded[b]
+    end, vim.tbl_keys(bufnrs))
     pos = pos + vim.tbl_count(bufnrs)
   end
   return nil
