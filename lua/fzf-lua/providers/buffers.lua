@@ -341,6 +341,11 @@ M.tabs = function(opts)
         return ret
       end)()
 
+      local tabi_by_tabh = vim.empty_dict()
+      for i, tabh in ipairs(vim.api.nvim_list_tabpages()) do
+        tabi_by_tabh[tabh] = i
+      end
+
       for tabnr, tabh in ipairs(vim.api.nvim_list_tabpages()) do
         (function()
           if opts.current_tab_only and tabh ~= core.CTX().tabh then return end
@@ -362,7 +367,7 @@ M.tabs = function(opts)
           if not opts.current_tab_only then
             cb(string.format("%s:%d:0)%s%s  %s",
               tab_cwd_tilde_base64,
-              tabh,
+              tabi_by_tabh[tabh],
               utils.nbsp,
               fn_title_hl(title),
               (tabh == core.CTX().tabh) and fn_marker_hl(marker) or ""))
@@ -373,7 +378,7 @@ M.tabs = function(opts)
               local b = filter_buffers(opts, { vim.api.nvim_win_get_buf(w) })[1]
               if b then
                 local prefix = string.format("%s:%d:%d)%s%s%s",
-                  tab_cwd_tilde_base64, tabh, w, utils.nbsp, utils.nbsp, utils.nbsp)
+                  tab_cwd_tilde_base64, tabi_by_tabh[tabh], w, utils.nbsp, utils.nbsp, utils.nbsp)
                 local bufinfo = populate_buffer_entries({}, { b }, w)[1]
                 cb(gen_buffer_entry(opts, bufinfo, max_bufnr, tab_cwd, prefix))
               end

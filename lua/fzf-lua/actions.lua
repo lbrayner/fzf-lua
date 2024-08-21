@@ -317,9 +317,10 @@ end
 
 M.file_switch = function(selected, opts)
   -- If called from `:FzfLua tabs` switch to requested tab/win
-  local tabh, winid = selected[1]:match("(%d+):(%d+)%)")
-  if tabh and winid then
-    vim.api.nvim_set_current_tabpage(tonumber(tabh))
+  local tabi, winid = selected[1]:match("(%d+):(%d+)%)")
+  if tabi and winid then
+    local tabh = vim.api.nvim_list_tabpages()[tonumber(tabi)]
+    vim.api.nvim_set_current_tabpage(tabh)
     if tonumber(winid) > 0 then
       vim.api.nvim_set_current_win(tonumber(winid))
     end
