@@ -444,6 +444,21 @@ M.tabs = function(opts)
     return entries
   end
 
+  opts.__fn_load_pos = function()
+    local entries = {}
+    for tabnr, tabh in ipairs(vim.api.nvim_list_tabpages()) do
+      table.insert(entries, tabnr)
+      if tabnr == core.CTX().tabnr then
+        opts.__load_pos = #entries
+        return
+      end
+      for _, w in ipairs(vim.api.nvim_tabpage_list_wins(tabh)) do
+        local b = filter_buffers(opts, { vim.api.nvim_win_get_buf(w) })[1]
+        if b then table.insert(entries, b) end
+      end
+    end
+  end
+
   -- build the "reload" cmd and remove '-- {+}' from the initial cmd
   local contents, id = shell.reload_action_cmd(opts, "")
   opts.__reload_cmd = contents
