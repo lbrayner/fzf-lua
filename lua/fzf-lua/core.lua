@@ -420,7 +420,6 @@ M.fzf = function(contents, opts)
 
   -- some functions such as buffers|tabs
   -- need to reacquire current buffer|tab state
-  if opts.__fn_load_pos then opts.__fn_load_pos(opts) end
   if opts.__fn_pre_fzf then opts.__fn_pre_fzf(opts) end
   if opts._fn_pre_fzf then opts._fn_pre_fzf(opts) end
   if opts.fn_pre_fzf then opts.fn_pre_fzf(opts) end

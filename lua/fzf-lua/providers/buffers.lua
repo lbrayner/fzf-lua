@@ -444,7 +444,7 @@ M.tabs = function(opts)
     return entries
   end
 
-  opts.__fn_load_pos = function(opts)
+  opts.fn_pre_fzf = function(opts)
     local entries = {}
     for tabnr, tabh in ipairs(vim.api.nvim_list_tabpages()) do
       table.insert(entries, tabnr)
