@@ -445,16 +445,16 @@ M.tabs = function(opts)
   end
 
   opts.fn_pre_fzf = function(opts)
-    local entries = {}
+    local counter = 0
     for tabnr, tabh in ipairs(vim.api.nvim_list_tabpages()) do
-      table.insert(entries, tabnr)
+      counter = counter + 1
       if tabnr == core.CTX().tabnr then
-        opts.__load_pos = #entries
+        opts.__load_pos = counter
         return
       end
       for _, w in ipairs(vim.api.nvim_tabpage_list_wins(tabh)) do
         local b = filter_buffers(opts, { vim.api.nvim_win_get_buf(w) })[1]
-        if b then table.insert(entries, b) end
+        if b then counter = counter + 1 end
       end
     end
   end
