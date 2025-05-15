@@ -417,11 +417,10 @@ M.fzf = function(contents, opts)
     opts.fzf_opts["--preview-window"] = "hidden:right:0"
   end
 
-  if opts.__fn_load_pos then opts.__fn_load_pos(opts) end
-  print("CTX tabn", M.CTX().tabnr, "load_pos", opts.__load_pos) -- TODO debug
 
   -- some functions such as buffers|tabs
   -- need to reacquire current buffer|tab state
+  if opts.__fn_load_pos then opts.__fn_load_pos(opts) end
   if opts.__fn_pre_fzf then opts.__fn_pre_fzf(opts) end
   if opts._fn_pre_fzf then opts._fn_pre_fzf(opts) end
   if opts.fn_pre_fzf then opts.fn_pre_fzf(opts) end
@@ -707,7 +706,6 @@ M.build_fzf_cli = function(opts, fzf_win)
   if opts.__load_pos and type(opts.__load_pos) == "number" and opts.__load_pos > 0 then
     table.insert(opts.fzf_opts["--bind"], string.format("load:pos(%d)", opts.__load_pos))
   end
-  -- print("binds", vim.inspect(opts.fzf_opts["--bind"])) -- TODO debug
   opts.fzf_opts["--color"] = M.create_fzf_colors(opts)
   do
     -- `actions.expect` parses the actions table and returns a list of
